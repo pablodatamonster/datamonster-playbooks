@@ -214,31 +214,119 @@ We use ACCOUNTADMIN here because Snowflake created its own warehouses, so SYSADM
 
 ### Step 8. First test load into RAW
 
-Prove the client's file format loads before building anything on top. Script: [`test_load_raw.sql`](test_load_raw.sql).
+**Why do this.** Before building anything on top (dbt models, dashboards, an AI assistant), prove that the client's files load into Snowflake exactly as they are. If something in the file format breaks, it is far cheaper to find out now with test files than later with real data.
 
-> **Run with:** role `LOADER` · warehouse `WH_TRANSFORM` · `CLIENT_PILOT.RAW`
+**What you need:** the setup script from step 4 already run; one month of test files (made-up data, never real data for a first test) in a folder on your laptop; the script [`test_load_raw.sql`](test_load_raw.sql) open in a Snowsight worksheet. Allow about 30 minutes the first time.
+
+**The idea in one picture.** Loading a file is like receiving a parcel: it is delivered to a **post room** first (the **stage**), then someone **unpacks** it onto the shelves (`COPY INTO` puts the rows into a **table**), following a set of **unpacking instructions** (the **file format**). Finally you **count what arrived** against the delivery note (the checks).
 
 ```mermaid
 flowchart LR
-  A["CSV files<br/>on your laptop"] -->|"Snowsight upload<br/>(role LOADER)"| B["Stage<br/>STG_FILES/YYYY-MM/<br/>private, encrypted"]
-  B -->|"COPY INTO<br/>with a file format"| C["Table in RAW<br/>all text + where-from columns"]
-  C -->|"checks"| D["Counts match the files"]
+  A["CSV files<br/>on your laptop"] -->|"8.3 upload in Snowsight<br/>(role LOADER)"| B["Stage = post room<br/>STG_FILES/2026-10/<br/>private, encrypted"]
+  B -->|"8.4 COPY INTO<br/>using the file format"| C["Table RAW_ROWS<br/>every value kept as text<br/>+ where each row came from"]
+  C -->|"8.5 checks"| D["Counts match<br/>what you counted<br/>on the laptop"]
 ```
 
-1. **Blocks 1 to 4** create the file format (header read for column names), the stage (encrypted, one folder per month) and the RAW table (every column as text, plus the source file, row number and load time). All metadata only.
-2. **Upload:** switch to LOADER (bottom left), then **Ingestion → Add data → Load files into a Stage**. Pick the schema and stage, Browse for the files and type a folder path such as `2026-10`. Check with `LIST @STG_FILES/2026-10/;`.
-3. **Block 5, `COPY INTO`:** matches columns by name, fills the where-from columns and loads all or nothing.
-4. **Block 6, checks**, one statement at a time (Ctrl+Enter). Work out the expected numbers yourself from the same files first (for example with a short Python script), then compare:
+> **Run with** (for the whole step, unless a sub-step says otherwise): role `LOADER` · warehouse `WH_TRANSFORM` · database and schema `CLIENT_PILOT.RAW`
 
-| Check | Question it answers |
+> **How to run one statement.** Click anywhere inside it and press **Ctrl+Enter** (Cmd+Enter on a Mac). Snowsight runs only the statement under the cursor, from its first word to its semicolon. To run several lines, highlight them first. If you run many statements at once, Snowsight shows **only the last result**, so for checks always run one at a time.
+
+#### 8.1 Count your files before you load them
+
+Do this first, so you have a "delivery note" that does not come from Snowflake. If Snowflake later shows the same numbers, you know nothing was lost or changed on the way in. For each file, note:
+
+- the number of rows (lines in the file minus the header line)
+- how many rows have a value in any optional column (for example a refund date)
+- whether any file is missing an optional column altogether
+
+You can do this in Excel (open each file and look at the row number of the last row, minus one) or with a few lines of Python:
+
+```python
+import csv, glob
+total = 0
+for f in sorted(glob.glob("2026-10/*.csv")):
+    rows = list(csv.DictReader(open(f, encoding="utf-8")))
+    filled = sum(1 for r in rows if r.get("refund_date"))
+    print(f, len(rows), "rows,", filled, "refund dates,", len(rows[0]), "columns")
+    total += len(rows)
+print("TOTAL", total)
+```
+
+Put all the month's files in one folder, for example `2026-10`, so you can upload them together.
+
+#### 8.2 Create the file format, stage and table (blocks 1 to 4)
+
+Run blocks 1 to 4 of the script one at a time. Each should answer "… successfully created" (or "already exists", which is fine on a rerun). None of them uses a warehouse, so they cost nothing.
+
+| Block | What it creates | In plain English |
+| --- | --- | --- |
+| 1 · Context | Nothing; sets role, warehouse, database and schema | "This is who I am and where I am working" |
+| 2 · File format `FF_CSV` | Reading rules for your CSVs | Comma-separated, first line holds the column names, blanks become empty (NULL). Because it reads the names, columns can arrive in any order and an optional column can be missing |
+| 3 · Stage `STG_FILES` | A private, encrypted folder inside Snowflake | The post room where files wait before they are loaded |
+| 4 · Table `RAW_ROWS` | A table with every column as text, plus `SOURCE_FILE`, `SOURCE_ROW` and `LOADED_AT` | RAW keeps exactly what arrived. Nothing is rejected because a value "looks wrong"; tidying happens later in STAGING. The three extra columns record which file and line each row came from, and when |
+
+#### 8.3 Upload the files to the stage
+
+This part is done with the mouse, not SQL.
+
+1. Bottom left of Snowsight, check the role says **LOADER**. If not, click your name and switch role. The stage belongs to LOADER, so other roles cannot upload to it.
+2. In the left menu go to **Ingestion → Add data → Load files into a Stage**.
+3. Choose the schema `CLIENT_PILOT.RAW` and the stage `STG_FILES`.
+4. Click **Browse**, open your month folder, select all the files (Ctrl+A) and click **Open**. Check they are all listed.
+5. In "Specify the path", type the month, for example `2026-10`. This creates a folder of that name inside the stage, so each month stays separate.
+6. Click **Upload**. Small files take a few seconds.
+
+Back in the worksheet, check they arrived:
+
+```sql
+LIST @STG_FILES/2026-10/;
+```
+
+You should see one row per file, with its name, size and an `md5` code (a fingerprint of the file's contents). The number of rows must equal the number of files you uploaded. `LIST` is free: it only reads information about the files.
+
+#### 8.4 Copy the files into the table (block 5)
+
+Run the `COPY INTO` statement. This is the actual load, and the first statement that wakes the warehouse (for a few seconds; it costs a tiny fraction of a credit).
+
+What its options mean:
+
+| Option | In plain English |
 | --- | --- |
-| Rows per file | Did each file arrive whole? |
-| Totals (rows, unique IDs, blanks, values that should be numbers) | Did anything get duplicated or mangled? |
-| A file missing an optional column | Does the format's flexibility really work? |
-| A first look at ten rows | Do values look right, and are the where-from columns filled? |
-| `COPY_HISTORY` | Does Snowflake keep its own record of the load? |
-| Run the COPY again | Is a file sent twice loaded twice? (It should not be.) |
-| Read the table as TRANSFORMER | Can dbt use it without new grants? |
+| `MATCH_BY_COLUMN_NAME` | Put each column of the file into the table column with the same name |
+| `INCLUDE_METADATA` | Fill in `SOURCE_FILE`, `SOURCE_ROW` and `LOADED_AT` for every row |
+| `ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE` | Needed because the table has more columns than the files (the three extra ones). Side effect: a badly built row with too many or too few commas is not stopped here, so whatever sends files in (an upload page, a script) must check that before |
+| `ON_ERROR = ABORT_STATEMENT` | All or nothing: if any row cannot be read, nothing is loaded and you get the reason |
+
+**What you should see:** one result line per file, each with status **LOADED** and the number of rows it loaded. If a file shows an error, read the message in `first_error`: it names the file, the line and what was wrong.
+
+#### 8.5 Check the load (block 6)
+
+The checks answer one question: **did exactly what was in the files arrive in the table, once, and can the next stage use it?** Run them one at a time and compare each answer with what you counted in 8.1.
+
+| Check | The question it answers | What you should see | Why it matters |
+| --- | --- | --- | --- |
+| **6a · Rows per file** | Did every file arrive whole? | One line per file, with the same row count you noted in 8.1 | A file cut short would quietly undercount everything built on it |
+| **6b · Totals** | Did anything get duplicated or garbled? | Total rows = your total; unique IDs = total rows (no duplicates); one month; the same count of filled optional values; `0` values that fail to read as a number | Duplicates inflate every figure; a number that cannot be read breaks every sum and average later |
+| **6c · The file missing an optional column** | Does a file without that column still load? | Its rows are all there, and the optional column is empty (NULL) for all of them | Proves the file format's flexibility really works, not just on paper |
+| **6d · Ten rows** | Does it look right, and is every row labelled? | Sensible values; `SOURCE_FILE`, `SOURCE_ROW` and `LOADED_AT` filled in | The label is how you answer "where did this number come from?" months later |
+| **6e · Load history** (`COPY_HISTORY`) | Does Snowflake keep its own record of the load? | One line per file, status **Loaded**, with row counts | Your audit trail: what was loaded, when, and whether it worked |
+| **6f · Run the COPY again** | If the same file is sent twice, is it counted twice? | "Copy executed with 0 files processed", and 6b still shows the same total | Snowflake remembers loaded files for 64 days and skips them, so a resend cannot double the numbers |
+| **6g · Read as TRANSFORMER** | Can the next stage (dbt) read the table without extra setup? | The same total row count | Proves the access rules from step 4 work for tables created later |
+
+In short: **6a to 6c** prove the data came in correctly, **6d and 6e** prove it can be traced, **6f** proves it is protected against duplicates and **6g** proves the next stage can use it.
+
+**For 6g**, highlight the first two lines (`USE ROLE TRANSFORMER;` and the `SELECT COUNT(*)`) and run them together: the result shown is the count. Then run `USE ROLE LOADER;` on its own to switch back.
+
+#### 8.6 If something does not match
+
+- **A file is missing from `LIST`:** upload it again to the same folder, then rerun the COPY. Only the new file is loaded.
+- **The COPY stops with an error:** nothing was loaded (all or nothing). Fix the file named in the message, upload it again (same name replaces the old one) and rerun the COPY.
+- **A count in 6a or 6b differs from 8.1:** first check your own count (header line, blank last line). If Snowflake really has fewer rows, look at that file's line in 6e.
+- **You want to start again from empty:** run `TRUNCATE TABLE RAW_ROWS;`, then run the COPY once with `FORCE = TRUE` added before the semicolon. Without `FORCE`, Snowflake skips the files it remembers loading.
+
+#### 8.7 Record it
+
+Save the script in the client's repo, write a short note of what you loaded and the check results, and note anything that broke and what was done about it. That note is the proof, for you and the client, that the file format works.
 
 ---
 
