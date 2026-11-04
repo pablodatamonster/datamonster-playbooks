@@ -4,6 +4,8 @@ Step-by-step guides for things set up once on a client project and needed again:
 
 By [Pablo Gomez](https://data.monster) · DataMonster
 
+**Read them as a website:** [pablodatamonster.github.io/datamonster-playbooks](https://pablodatamonster.github.io/datamonster-playbooks/)
+
 ## Playbooks
 
 | Playbook | Category | Time needed | Last checked |
@@ -26,6 +28,10 @@ Every playbook follows the same parts, in this order:
 8. **Learning log:** a dated notebook of things learnt along the way, newest first
 
 Diagrams are [Mermaid](https://mermaid.js.org/) blocks, so GitHub draws them and they stay editable as text. SQL scripts sit next to the playbook that uses them.
+
+## The website
+
+The site is served by GitHub Pages straight from `main` (no build step). `index.html` lists the playbooks in [`playbooks.json`](playbooks.json); `playbook.html?p=<file>.md` shows a playbook by reading its Markdown file, so the Markdown is the only copy to edit. To add a playbook: add its `.md` file in a folder per tool and one entry to `playbooks.json`.
 
 ## A note on client details
 

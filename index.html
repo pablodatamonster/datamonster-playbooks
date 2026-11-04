@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23e8353a%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-size=%2219%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Georgia%22 font-weight=%22bold%22%3EP%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataMonster Playbooks</title>
+<meta name="description" content="Step-by-step playbooks for setting up data platforms and tools on client projects, by Pablo Gomez (DataMonster).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="./">DataMonster <span>Playbooks</span></a>
+    <nav><a href="https://github.com/pablodatamonster/datamonster-playbooks">GitHub</a><a href="https://data.monster">data.monster</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="kicker">Playbooks for the datafam</p>
+    <h1>Set it up once, write it down, share it</h1>
+    <p class="lead">Step-by-step guides for the platforms and tools I set up on client projects. Each one is written for someone doing it for the first time, explains the reason behind every step and keeps a learning log of what tripped me up.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Library</p>
+    <div id="cards" class="cards" aria-live="polite"></div>
+  </section>
+
+  <section class="how">
+    <div>
+      <p class="kicker">How each playbook is laid out</p>
+      <ol class="two-col">
+        <li><b>What and when</b></li>
+        <li><b>Before you start</b>, permanent choices flagged</li>
+        <li><b>Big picture</b> diagram</li>
+        <li><b>Steps</b>, with the reason behind each</li>
+        <li><b>Gotchas</b></li>
+        <li><b>Checklist</b> for next time</li>
+        <li><b>Used on</b></li>
+        <li><b>Learning log</b>, newest first</li>
+      </ol>
+    </div>
+    <p class="note">Names such as <code>CLIENT_PILOT</code> and <code>ITADMIN</code> are placeholders. No details from real client projects are published. Screens and prices change: check the "Last checked" date and the vendor's current documentation.</p>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap">By <a href="https://data.monster">Pablo Gomez</a> · DataMonster</div></footer>
+
+<script>
+fetch('playbooks.json').then(r => r.json()).then(list => {
+  const el = document.getElementById('cards');
+  el.innerHTML = list.map(p => `
+    <a class="card" href="playbook.html?p=${encodeURIComponent(p.file)}">
+      <p class="kicker">${p.category}</p>
+      <h2>${p.title}</h2>
+      <p>${p.summary}</p>
+      <p class="meta"><span>${p.time}</span><span>Last checked ${p.checked}</span></p>
+      <p class="tags">${p.tools.map(t => `<span>${t}</span>`).join('')}</p>
+    </a>`).join('');
+}).catch(() => {
+  document.getElementById('cards').textContent = 'The library could not be loaded. Browse the playbooks on GitHub instead.';
+});
+</script>
+</body>
+</html>

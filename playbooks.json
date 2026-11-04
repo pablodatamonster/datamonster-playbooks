@@ -1,0 +1,11 @@
+[
+  {
+    "title": "Snowflake: set up an account for a client project",
+    "file": "snowflake/set_up_account_for_client_project.md",
+    "category": "Data platform",
+    "tools": ["Snowflake"],
+    "summary": "Open a Snowflake account in the client's name, set up a spending cap, roles, warehouses and a RAW, STAGING and MARTS database with one script, then prove the client's files load with a first test load.",
+    "time": "About 45 minutes, plus 30 for a first test load",
+    "checked": "4 Nov 2026"
+  }
+]
