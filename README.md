@@ -40,3 +40,7 @@ These playbooks are generic. Names such as `CLIENT_PILOT`, `ITADMIN` and `itadmi
 ## Using them
 
 Screens and prices change. Check the "Last checked" date before following a playbook, and sense-check anything older than six months against the vendor's current documentation. Nothing here is legal, security or financial advice for your situation.
+
+## Licence
+
+These playbooks are shared under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE). You may copy, share and adapt them, for any purpose, as long as you credit Pablo Gomez (DataMonster) with a link to this repository and say if you made changes.
