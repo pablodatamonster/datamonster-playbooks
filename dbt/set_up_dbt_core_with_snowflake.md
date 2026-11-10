@@ -19,7 +19,7 @@ Scripts and files: [`dbt_service_user.sql`](dbt_service_user.sql) (step 3) and t
 5. [Gotchas](#5-gotchas)
 6. [Checklist for next time](#6-checklist-for-next-time)
 7. [Used on](#7-used-on)
-8. [Learning log](#8-learning-log)
+8. [What you'll learn](#8-what-youll-learn)
 
 ---
 
@@ -213,14 +213,18 @@ profiles.yml
 
 ---
 
-## 8. Learning log
+## 8. What you'll learn
 
-A running notebook of things learnt while using dbt, newest first.
+By the end of this playbook you will be able to:
 
-### 10 Nov 2026 · First dbt project
-
-- **dbt only sends SQL.** It never moves data out of Snowflake; it writes `CREATE VIEW` or `CREATE TABLE ... AS SELECT` for each model and runs them in the order the `ref()`s imply.
-- **Sources first, models later.** A first `dbt build` with only sources and their tests is a quick way to prove the connection and the role's rights before writing any model.
-- **`dbt show --inline`** answers a quick question ("why are there more rows than expected?") through the same login dbt uses, so it also checks what the role can see.
-- **A higher row count than expected was not an error.** RAW held earlier versions of replaced files. The lesson: write down the expected number and why before running a check, then explain any difference.
-- **Service users and key pairs** follow the same pattern for every tool (dbt, the upload server, BI, MCP): one user per tool, one role, one key, the key in the password manager.
+| You will be able to | Where |
+| --- | --- |
+| **Explain what dbt does and does not do.** It only sends SQL: for each model it writes `CREATE VIEW` or `CREATE TABLE ... AS SELECT` and runs them in the order the `ref()`s imply. The data never leaves Snowflake | Section 1, step 6 |
+| **Keep a tool's installs apart** with a Python virtual environment and pinned versions, so every machine runs the same dbt | Step 1 |
+| **Give any tool its own Snowflake login** the safe way: a service user, one role with the least rights it needs, a key pair instead of a password with the private key in a password manager. The same pattern works for an upload server, a BI tool or an MCP server | Steps 2 and 3 |
+| **Test what a role can really see** with secondary roles switched off, rather than what your own admin login can see | Step 4, Gotchas |
+| **Lay out a dbt project** with sources, staging views, mart tables and separate dev and prod schemas, so trying things out never breaks a dashboard | Step 5 |
+| **Prove the set-up before writing any model:** a first `dbt build` with only sources and their tests checks the sign-in, the role and the warehouse in one go | Step 6 |
+| **Answer quick questions with `dbt show --inline`,** through the same login dbt uses, so the answer also shows what the role can see | Step 6 |
+| **Check numbers the right way:** write down the expected result and why before running a check, then explain any difference. A higher row count is not always an error; RAW may keep earlier versions of replaced files | Step 4, Gotchas |
+| **Commit safely:** keys, `profiles.yml` and local folders stay out of Git | Step 7 |
