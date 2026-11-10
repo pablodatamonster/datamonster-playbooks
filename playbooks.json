@@ -3,9 +3,23 @@
     "title": "Snowflake: set up an account for a client project",
     "file": "snowflake/set_up_account_for_client_project.md",
     "category": "Data platform",
-    "tools": ["Snowflake"],
+    "tools": [
+      "Snowflake"
+    ],
     "summary": "Open a Snowflake account in the client's name, set up a spending cap, roles, warehouses and a RAW, STAGING and MARTS database with one script, then prove the client's files load with a first test load.",
     "time": "About 45 minutes, plus 30 for a first test load",
     "checked": "4 Nov 2026"
+  },
+  {
+    "title": "dbt: set up dbt Core with Snowflake for a client project",
+    "file": "dbt/set_up_dbt_core_with_snowflake.md",
+    "category": "Data platform",
+    "tools": [
+      "dbt",
+      "Snowflake"
+    ],
+    "summary": "Install dbt Core in a virtual environment, give it a key-pair service user in Snowflake with the least rights it needs, start a project with dev and prod targets and sources, and prove it all with a first run of tests.",
+    "time": "About 1 hour",
+    "checked": "10 Nov 2026"
   }
 ]

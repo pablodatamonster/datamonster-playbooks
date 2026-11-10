@@ -1,0 +1,32 @@
+# Sources: the tables dbt reads but does not build.
+# Models refer to them with {{ source('raw', 'raw_rows') }}.
+# Replace the table and column names with your own.
+
+version: 2
+
+sources:
+  - name: raw
+    database: CLIENT_PILOT
+    schema: RAW
+    description: Files exactly as received, every column text.
+    tables:
+      - name: raw_rows
+        identifier: RAW_ROWS          # the real table name in Snowflake
+        description: One row per record per loaded file.
+        columns:
+          - name: record_id
+            data_tests: [not_null]
+          - name: source_file
+            description: Which file the row came from.
+            data_tests: [not_null]
+
+  - name: uploads
+    database: CLIENT_PILOT
+    schema: UPLOADS
+    description: Upload control, if your load process keeps one (which file is current for each period).
+    tables:
+      - name: current_uploads
+        identifier: CURRENT_UPLOADS
+        columns:
+          - name: upload_id
+            data_tests: [not_null, unique]

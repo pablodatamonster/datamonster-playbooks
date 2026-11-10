@@ -11,6 +11,7 @@ By [Pablo Gomez](https://data.monster) · DataMonster
 | Playbook | Category | Time needed | Last checked |
 | --- | --- | --- | --- |
 | [Snowflake: set up an account for a client project](snowflake/set_up_account_for_client_project.md) | Data platform | About 45 minutes, plus about 30 minutes for a first test load | 4 Nov 2026 |
+| [dbt: set up dbt Core with Snowflake for a client project](dbt/set_up_dbt_core_with_snowflake.md) | Data platform | About 1 hour | 10 Nov 2026 |
 
 More to come (GitHub organisation and repo for a client, password manager for a client project).
 

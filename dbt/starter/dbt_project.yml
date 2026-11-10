@@ -1,0 +1,32 @@
+# dbt project for a client pilot (DataMonster playbook starter)
+# Turns raw files in RAW into STAGING (clean, typed rows) and
+# MARTS (final metrics). Replace client_pilot with your project name.
+
+name: client_pilot
+version: "0.1.0"
+profile: client_pilot            # the connection details, in profiles.yml (never committed)
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+analysis-paths: ["analyses"]
+
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  client_pilot:
+    +persist_docs:            # copy model and column descriptions into Snowflake comments
+      relation: true
+      columns: true
+    staging:
+      +schema: STAGING        # CLIENT_PILOT.STAGING in prod (see macros/generate_schema_name.sql)
+      +materialized: view
+    marts:
+      +schema: MARTS          # CLIENT_PILOT.MARTS in prod
+      +materialized: table
+
+tests:
+  client_pilot:
+    +severity: error

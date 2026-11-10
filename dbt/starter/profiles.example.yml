@@ -1,0 +1,21 @@
+# Copy to C:\Users\<you>\.dbt\profiles.yml (outside the repo). Never commit profiles.yml.
+# No secrets in this file: the private key is read from its file path.
+
+client_pilot:
+  target: dev                       # default: build into DEV_STAGING and DEV_MARTS
+  outputs:
+    dev: &snowflake
+      type: snowflake
+      account: orgname-accountname  # Snowsight: your name > account > View account details
+      user: SVC_DBT
+      authenticator: snowflake_jwt  # key-pair sign-in
+      private_key_path: C:\Users\<you>\secrets\svc_dbt_key.p8
+      role: TRANSFORMER
+      warehouse: WH_TRANSFORM
+      database: CLIENT_PILOT
+      schema: STAGING
+      threads: 4
+      client_session_keep_alive: false
+      query_tag: dbt_client_pilot
+    prod:
+      <<: *snowflake                # same login; builds STAGING and MARTS
