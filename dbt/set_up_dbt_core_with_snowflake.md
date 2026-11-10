@@ -19,7 +19,7 @@ Scripts and files: [`dbt_service_user.sql`](dbt_service_user.sql) (step 3) and t
 5. [Gotchas](#5-gotchas)
 6. [Checklist for next time](#6-checklist-for-next-time)
 7. [Used on](#7-used-on)
-8. [What you'll learn](#8-what-youll-learn)
+8. [Learning log](#8-learning-log)
 
 ---
 
@@ -76,7 +76,7 @@ flowchart TB
 
 - [ ] **Snowflake is set up** with a database, RAW, STAGING and MARTS schemas, a TRANSFORMER role that reads RAW and owns STAGING and MARTS, plus a small warehouse for it.
 - [ ] **TRANSFORMER may create schemas** in the database (`GRANT CREATE SCHEMA ON DATABASE ... TO ROLE TRANSFORMER`), so dev schemas can be made.
-- [ ] **Python** is installed. Check the Python versions dbt supports before you start; the newest Python is sometimes not supported yet. We used 3.13 when 3.14 was the newest.
+- [ ] **Python** is installed. Check the Python versions dbt supports before you start; the newest Python is sometimes not supported yet (3.13 was used here while 3.14 was the newest).
 - [ ] **Git** and the client's repo are on the laptop.
 - [ ] **A password manager** for the private key.
 - [ ] **OpenSSL** to make the key pair. Git for Windows includes it (`openssl` in Git Bash).
@@ -213,18 +213,15 @@ profiles.yml
 
 ---
 
-## 8. What you'll learn
+## 8. Learning log
 
-By the end of this playbook you will be able to:
+Notes added each time this playbook is used, newest first. Versions and screens change, so check the date.
 
-| You will be able to | Where |
-| --- | --- |
-| **Explain what dbt does and does not do.** It only sends SQL: for each model it writes `CREATE VIEW` or `CREATE TABLE ... AS SELECT` and runs them in the order the `ref()`s imply. The data never leaves Snowflake | Section 1, step 6 |
-| **Keep a tool's installs apart** with a Python virtual environment and pinned versions, so every machine runs the same dbt | Step 1 |
-| **Give any tool its own Snowflake login** the safe way: a service user, one role with the least rights it needs, a key pair instead of a password with the private key in a password manager. The same pattern works for an upload server, a BI tool or an MCP server | Steps 2 and 3 |
-| **Test what a role can really see** with secondary roles switched off, rather than what your own admin login can see | Step 4, Gotchas |
-| **Lay out a dbt project** with sources, staging views, mart tables and separate dev and prod schemas, so trying things out never breaks a dashboard | Step 5 |
-| **Prove the set-up before writing any model:** a first `dbt build` with only sources and their tests checks the sign-in, the role and the warehouse in one go | Step 6 |
-| **Answer quick questions with `dbt show --inline`,** through the same login dbt uses, so the answer also shows what the role can see | Step 6 |
-| **Check numbers the right way:** write down the expected result and why before running a check, then explain any difference. A higher row count is not always an error; RAW may keep earlier versions of replaced files | Step 4, Gotchas |
-| **Commit safely:** keys, `profiles.yml` and local folders stay out of Git | Step 7 |
+### 10 Nov 2026 · dbt Core 1.12.6, dbt-snowflake 1.12.5, Python 3.13
+
+- **dbt only sends SQL.** For each model it writes `CREATE VIEW` or `CREATE TABLE ... AS SELECT` and runs them in the order the `ref()`s imply. The data never leaves Snowflake.
+- **Prove the set-up before writing models.** A first `dbt build` with only sources and their tests checks the sign-in, the role and the warehouse in one go, in a few seconds of warehouse time.
+- **`dbt show --inline`** is the quickest way to answer a question about the data. It uses the same login as dbt, so the answer also shows what the role can see.
+- **Expected numbers can be out of date.** RAW kept earlier versions of replaced files, so the row count was higher than one file per period. Write down the expected number and why before running a check, then explain any difference before moving on.
+- **One service user per tool.** dbt, an upload server, a BI tool and an MCP server each get their own user, one role and one key pair, with the private key in the password manager.
+- **Version notices.** dbt Core 1.10 reported itself as deprecated at install time and 1.12 said dbt v2 is now the default for new installs. Pin a supported version and record the choice.
