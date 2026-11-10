@@ -373,12 +373,12 @@ Save the script in the client's repo, write a short note of what you loaded and 
 
 ## 8. Learning log
 
-A running notebook of things learnt while using Snowflake, newest first.
+Notes added each time this playbook is used, newest first. Screens and menus change, so check the date.
 
-### 4 Nov 2026 · First data load into RAW
+### 4 Nov 2026 · Loading CSV files into RAW
 
 - **A load has three parts.** A **file format** (saved reading rules), a **stage** (a private landing folder inside Snowflake) and `COPY INTO`, which reads staged files into a table. Files go into the stage first; nothing reaches the table until the COPY runs.
-- **Uploading files has moved.** It is now **Ingestion → Add data → Load files into a Stage** (not Data → Databases). Pick the schema and stage, Browse for the files and type a folder path (we use one folder per month, e.g. `2026-10`). Switch to the role that owns the stage first (bottom left).
+- **Uploading files has moved.** It is now **Ingestion → Add data → Load files into a Stage** (not Data → Databases). Pick the schema and stage, Browse for the files and type a folder path (one folder per month works well, e.g. `2026-10`). Switch to the role that owns the stage first (bottom left).
 - **LIST shows what is in a stage.** `LIST @STAGE/folder/;` gives each file's name, size and checksum. Metadata only, no warehouse.
 - **Match columns by name.** `PARSE_HEADER = TRUE` in the file format plus `MATCH_BY_COLUMN_NAME` in the COPY copes with columns in a different order or an optional column missing (it is left NULL).
 - **Label every row with its source.** `INCLUDE_METADATA` fills columns such as file name, row number and load time. With CSV it needs `ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE`, so rows with the wrong number of fields must be caught before the file is staged.
@@ -393,7 +393,7 @@ A running notebook of things learnt while using Snowflake, newest first.
 - **Snowsight remembers your last role.** The default role applies to new sessions, but the bottom-left corner shows the role you last used. Check it before running anything.
 - **The trial meter** sits bottom left: credits left and days to the end of the trial.
 
-### 30 Oct 2026 · First day with Snowflake
+### 30 Oct 2026 · New account basics
 
 - **Role and warehouse first.** They decide what you can do (role) and what gets billed (warehouse). Check them before every run.
 - **Settings are free, data work is not.** SHOW, ALTER, GRANT, CREATE ROLE and USE need no warehouse. Only queries that read or process data start one.

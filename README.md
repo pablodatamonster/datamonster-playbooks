@@ -1,6 +1,6 @@
 # DataMonster Playbooks
 
-Step-by-step guides for things set up once on a client project and needed again: data platforms, tools, client admin and workflows. Each one is written for someone doing it for the first time, explains the reason behind every step and keeps a learning log of what tripped us up.
+Step-by-step guides for things set up once on a client project and needed again: data platforms, tools, client admin and workflows. Each one is written for someone doing it for the first time, explains the reason behind every step and keeps a dated learning log of field notes.
 
 By [Pablo Gomez](https://data.monster) · DataMonster
 
