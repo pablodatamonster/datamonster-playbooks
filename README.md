@@ -6,6 +6,12 @@ By [Pablo Gomez](https://data.monster) · DataMonster
 
 **Read them as a website:** [pablodatamonster.github.io/datamonster-playbooks](https://pablodatamonster.github.io/datamonster-playbooks/)
 
+## Featured case study
+
+**[Case study: a secure end-to-end data platform, from ingestion to AI insights](case_studies/secure_data_platform.md)** · in progress, last updated 11 Nov 2026
+
+An 8-week pilot I am delivering as sole consultant: sensitive data from several organisations is checked on arrival, turned into tested measures and delivered as dashboards and through AI assistants. It covers the architecture, the main lessons and the stack with why each tool was chosen.
+
 ## Playbooks
 
 | Playbook | Category | Time needed | Last checked |

@@ -23,7 +23,12 @@
   <section class="hero">
     <p class="kicker">Playbooks for the datafam</p>
     <h1>Set it up once, write it down, share it</h1>
-    <p class="lead">Step-by-step guides for the platforms and tools I set up on client projects. Each one is written for someone doing it for the first time, explains the reason behind every step and keeps a dated learning log of field notes.</p>
+    <p class="lead">Step-by-step guides for the platforms and tools I set up on client projects, plus an end-to-end case study of a project in progress. Each one is written for someone doing it for the first time, explains the reason behind every step and keeps a dated learning log of field notes.</p>
+  </section>
+
+  <section id="featured-wrap" hidden>
+    <p class="kicker">Featured case study</p>
+    <div id="featured"></div>
   </section>
 
   <section>
@@ -52,7 +57,20 @@
 <footer class="site"><div class="wrap">By <a href="https://data.monster">Pablo Gomez</a> · DataMonster · Shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></footer>
 
 <script>
-fetch('playbooks.json').then(r => r.json()).then(list => {
+fetch('playbooks.json').then(r => r.json()).then(all => {
+  const feat = all.filter(p => p.featured);
+  const list = all.filter(p => !p.featured);
+  if (feat.length) {
+    document.getElementById('featured-wrap').hidden = false;
+    document.getElementById('featured').innerHTML = feat.map(p => `
+    <a class="card featured" href="playbook.html?p=${encodeURIComponent(p.file)}">
+      <p class="kicker">${p.category}</p>
+      <h2>${p.title}</h2>
+      <p>${p.summary}</p>
+      <p class="meta"><span>${p.time}</span><span>Last updated ${p.checked}</span></p>
+      <p class="tags">${p.tools.map(t => `<span>${t}</span>`).join('')}</p>
+    </a>`).join('');
+  }
   const el = document.getElementById('cards');
   el.innerHTML = list.map(p => `
     <a class="card" href="playbook.html?p=${encodeURIComponent(p.file)}">

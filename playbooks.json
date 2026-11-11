@@ -1,5 +1,24 @@
 [
   {
+    "title": "Case study: a secure end-to-end data platform, from ingestion to AI insights",
+    "file": "case_studies/secure_data_platform.md",
+    "category": "Case study",
+    "featured": true,
+    "tools": [
+      "Snowflake",
+      "dbt",
+      "Next.js",
+      "Vercel",
+      "Entra External ID",
+      "Python",
+      "MCP",
+      "Claude"
+    ],
+    "summary": "An 8-week pilot I am delivering as sole consultant: sensitive data from several organisations is checked on arrival, turned into tested measures and delivered as dashboards and through AI assistants. Covers the architecture, the main lessons and the stack with why each tool was chosen.",
+    "time": "8 weeks (in progress)",
+    "checked": "11 Nov 2026"
+  },
+  {
     "title": "Snowflake: set up an account for a client project",
     "file": "snowflake/set_up_account_for_client_project.md",
     "category": "Data platform",
