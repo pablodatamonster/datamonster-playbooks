@@ -367,7 +367,7 @@ Save the script in the client's repo, write a short note of what you loaded and 
 
 ## 7. Used on
 
-- **A data pilot for a UK client (autumn 2026):** Enterprise, AWS Europe (London), a monthly cap of 25 credits, synthetic data only during the pilot. Account set up in the first week; a first test load of one month of synthetic files (12 files, about 5,500 rows) a week later, every check matched.
+- **A data pilot for a client (autumn 2026):** Enterprise edition, a monthly credit cap, synthetic data only during the pilot. Account set up in the first week; a first test load of one month of synthetic files a week later, every check matched.
 
 ---
 

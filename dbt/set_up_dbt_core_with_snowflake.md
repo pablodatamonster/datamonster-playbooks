@@ -209,7 +209,7 @@ profiles.yml
 
 ## 7. Used on
 
-- **A data pilot for a UK client (autumn 2026):** dbt Core 1.12 with Snowflake Enterprise, a key-pair service user with the TRANSFORMER role, synthetic data only. Set up in about an hour; the first build ran 7 source tests, all passed.
+- **A data pilot for a client (autumn 2026):** dbt Core 1.12 with Snowflake Enterprise, a key-pair service user with the TRANSFORMER role, synthetic data only. Set up in about an hour; the first build ran 7 source tests, all passed.
 
 ---
 
