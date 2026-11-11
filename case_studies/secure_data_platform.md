@@ -40,6 +40,6 @@ Every account is opened in the client's name from day one, so handover is simple
 
 - **Judge every option by what the end user sees.** A technically neat option failed because of what the people uploading files would see on screen.
 - **Write the spec before the code.** A written file format and one clear rule (fix what can only mean one thing, reject what is ambiguous) made the checks simple to build.
-- **Build an answer key, not just test data.** Knowing the true result for every month turns "the numbers look right" into a pass or fail.
-- **Put a default on every decision.** "If we have not decided by Friday, we do X" keeps a fixed-scope project moving.
+- **Make synthetic data as close to the real thing as possible.** Calibrated to public statistics and checked by a domain expert, it lets the whole pipeline be built and tested properly before any real data arrives.
+- **Build stories, not just pretty dashboards.** Decide which stories you want to tell and show in a demo, then shape the data and dashboards so those stories stand out.
 - **Use AI with a human in charge.** AI drafts, documents and codes; every step is signed off by a person and documented as it is done.
