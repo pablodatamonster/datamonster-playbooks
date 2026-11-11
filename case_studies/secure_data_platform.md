@@ -2,24 +2,17 @@
 
 **Status:** in progress · **Duration:** 8 weeks · **Role:** sole consultant, from scoping to handover
 
-By [Pablo Gomez](https://data.monster), Tableau Visionary and Tableau Ambassador · DataMonster
+By [Pablo Gomez](https://data.monster), Tableau Visionary and Tableau DataDev Ambassador · DataMonster
 
 ## The problem
 
-A start-up needed to prove, quickly and on a small budget, that its monthly benchmarking product could work from end to end: sensitive data arriving from several organisations, checked on arrival, turned into a small set of tested measures and delivered as dashboards and through AI assistants. Each organisation must only ever see its own figures against an anonymous benchmark.
+A start-up needed to prove that its monthly benchmarking product could work from end to end: sensitive data arriving from several organisations, checked on arrival, turned into a small set of tested measures and delivered as dashboards and through AI assistants. Each organisation must only ever see its own figures against an anonymous benchmark.
 
 The pilot runs on realistic synthetic data only and is built so the same platform can take real data once the business is funded.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  ING["Data ingestion"] --> PAGE["Secure upload page<br/>sign-in and checks"]
-  PAGE -- "rejected: reason<br/>shown and logged" --> ING
-  PAGE -- "accepted: tidied file" --> WH["Cloud data warehouse<br/>raw, staging, marts"]
-  WH --> DASH["Dashboards<br/>own figures and benchmark"]
-  WH --> AI["AI connector (MCP)<br/>plain-English questions"]
-```
+![Architecture: data ingestion, upload page with sign-in and checks, data warehouse with raw, staging and marts, then dashboards and an AI connector (MCP)](secure_data_platform_architecture.svg)
 
 Three principles shape it:
 

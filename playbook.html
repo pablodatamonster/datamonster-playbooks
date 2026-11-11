@@ -45,6 +45,11 @@ if (!/^[a-z0-9_\-\/]+\.md$/i.test(file) || file.includes('..')) {
       const esc = code.replace(/&/g, '&amp;').replace(/</g, '&lt;');
       return `<pre><code class="lang-${lang || ''}">${esc}</code></pre>`;
     },
+    image(href, title, text) {
+      // Images next to a playbook load from its folder.
+      if (href && !/^(https?:|data:)/.test(href)) href = dir + href;
+      return `<img class="figure" src="${href}" alt="${text || ''}">`;
+    },
     link(href, title, text) {
       // Relative links to scripts and other files open on GitHub; other playbooks open here.
       if (href && !/^(https?:|#|mailto:)/.test(href)) {

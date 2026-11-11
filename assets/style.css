@@ -88,3 +88,4 @@ footer.site { border-top: 1px solid var(--line); padding: 28px 0; font-size: 14p
 .doc h2#main-lessons + ul > li:nth-child(3n+2):last-child { grid-column: span 2; }
 @media (max-width: 760px) { .doc h2#main-lessons + ul { grid-template-columns: 1fr; } .doc h2#main-lessons + ul > li:last-child { grid-column: auto; } }
 .doc h2#main-lessons + ul > li:last-child strong { color: #fff; }
+.doc img.figure { display: block; width: 100%; height: auto; margin: 24px 0 8px; }
