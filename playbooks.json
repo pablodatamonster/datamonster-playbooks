@@ -40,5 +40,18 @@
     "summary": "Install dbt Core in a virtual environment, give it a key-pair service user in Snowflake with the least rights it needs, start a project with dev and prod targets and sources, and prove it all with a first run of tests.",
     "time": "About 1 hour",
     "checked": "10 Nov 2026"
+  },
+  {
+    "title": "Microsoft 365: staff sign-in and one-mailbox email for a client's admin site",
+    "file": "microsoft-365/admin_site_staff_sign_in_and_scoped_mail.md",
+    "category": "Client admin",
+    "tools": [
+      "Microsoft Entra",
+      "Microsoft 365",
+      "Exchange Online"
+    ],
+    "summary": "Let a client's staff sign in to an internal site with their own Microsoft 365 accounts, limit it to named people with three separate locks and let the site send email from one shared no-reply mailbox and no other.",
+    "time": "About 2 hours",
+    "checked": "19 Nov 2026"
   }
 ]
