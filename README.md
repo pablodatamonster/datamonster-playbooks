@@ -18,6 +18,7 @@ An 8-week pilot I am delivering as sole consultant: sensitive data from several 
 | --- | --- | --- | --- |
 | [Snowflake: set up an account for a client project](snowflake/set_up_account_for_client_project.md) | Data platform | About 45 minutes, plus about 30 minutes for a first test load | 4 Nov 2026 |
 | [dbt: set up dbt Core with Snowflake for a client project](dbt/set_up_dbt_core_with_snowflake.md) | Data platform | About 1 hour | 10 Nov 2026 |
+| [GitHub Actions: run dbt on a schedule](github-actions/run_dbt_on_a_schedule.md) | Data platform | About 1 hour | 27 Nov 2026 |
 | [Microsoft 365: staff sign-in and one-mailbox email for a client's admin site](microsoft-365/admin_site_staff_sign_in_and_scoped_mail.md) | Client admin | About 2 hours | 19 Nov 2026 |
 
 More to come (GitHub organisation and repo for a client, password manager for a client project).

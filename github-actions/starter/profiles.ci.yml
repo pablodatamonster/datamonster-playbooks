@@ -1,0 +1,25 @@
+﻿# dbt profile for GitHub Actions (starter). No secrets in this file.
+# Put it in the repo as dbt/profiles.ci.yml. The workflow copies it to a
+# temporary folder as profiles.yml and fills every value from GitHub Actions
+# secrets. On the laptop dbt keeps using C:\Users\<you>\.dbt\profiles.yml.
+#
+# The private key is passed as text, never written to disk. The variable name
+# starts with DBT_ENV_SECRET_ so dbt also blanks it out of its own logs.
+# Rename client_pilot to the profile name in your dbt_project.yml.
+
+client_pilot:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      authenticator: snowflake_jwt            # key-pair sign-in
+      private_key: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PRIVATE_KEY') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+      schema: STAGING
+      threads: 4
+      client_session_keep_alive: false
+      query_tag: "{{ env_var('DBT_QUERY_TAG', 'dbt_client_pilot') }}"   # the workflow adds the run number

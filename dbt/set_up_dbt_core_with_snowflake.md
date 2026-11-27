@@ -205,6 +205,8 @@ profiles.yml
 - [ ] `dbt parse`, `dbt debug` and `dbt build` all clean
 - [ ] `.gitignore` covers keys, `profiles.yml`, `.venv` and `target`; committed
 
+**Next:** to run dbt automatically each month, see [GitHub Actions: run dbt on a schedule](../github-actions/run_dbt_on_a_schedule.md).
+
 ---
 
 ## 7. Used on

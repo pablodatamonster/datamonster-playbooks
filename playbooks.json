@@ -42,6 +42,19 @@
     "checked": "10 Nov 2026"
   },
   {
+    "title": "GitHub Actions: run dbt on a schedule",
+    "file": "github-actions/run_dbt_on_a_schedule.md",
+    "category": "Data platform",
+    "tools": [
+      "GitHub Actions",
+      "dbt",
+      "Snowflake"
+    ],
+    "summary": "Rebuild and test a dbt project against prod once a month and on demand with GitHub Actions, signing in to Snowflake with a key pair kept in Actions secrets, and send failure emails to the client's admin mailbox.",
+    "time": "About 1 hour",
+    "checked": "27 Nov 2026"
+  },
+  {
     "title": "Microsoft 365: staff sign-in and one-mailbox email for a client's admin site",
     "file": "microsoft-365/admin_site_staff_sign_in_and_scoped_mail.md",
     "category": "Client admin",
